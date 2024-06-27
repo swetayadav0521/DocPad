@@ -5,5 +5,7 @@ services:
     build: .
     ports:
       - "8000:8000"
+    volumes:
+       - ./app:/app/volume
     environment:
-      - DATABASE_URL=sqlite:///./initsql.db
+      - DATABASE_URL=sqlite:///./sql.db

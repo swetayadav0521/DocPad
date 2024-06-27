@@ -1,4 +1,5 @@
 # init_db.py
+
 import logging
 import os
 from sqlalchemy import create_engine
@@ -10,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./initsql.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./sql.db")
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

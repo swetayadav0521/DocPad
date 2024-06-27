@@ -12,7 +12,6 @@ class DoctorCreate(BaseModel):
     gender: str
     specialty: str
 
-
 class InteractionCreate(BaseModel):
     doctor_id: int
     datetime: datetime

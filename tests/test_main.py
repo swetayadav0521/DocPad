@@ -1,20 +1,22 @@
 # test_main.py
 
 import atexit
-from datetime import datetime
 import os
 import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.main import app, get_db
-from app import models
-from app.database import Base
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+from app import models
+from datetime import datetime
+from sqlalchemy import create_engine
+
+from app.database import Base
+from app.main import app, get_db
+from fastapi.testclient import TestClient
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = "sqlite:///./test.db"
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    DATABASE_URL, connect_args={"check_same_thread": False}
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -46,11 +48,12 @@ def setup_db():
     yield {"patient": patient, "doctor": doctor}
 
 def test_create_interaction(setup_db):
+    # Record doctor and patient interaction endpoint
     patient_id = setup_db["patient"].id
     doctor_id = setup_db["doctor"].id
     interaction_data = {"patient_id": patient_id, "doctor_id": doctor_id, "notes": "Routine Checkup", "healthy":True, "datetime": str(datetime.now())}
     
-    response = client.post(f"/patient/{patient_id}/interactions", json=interaction_data)
+    response = client.post(f"/patient/{patient_id}/interaction", json=interaction_data)
 
     assert response.status_code == 200
     assert response.json()["patient_id"] == patient_id
@@ -58,6 +61,7 @@ def test_create_interaction(setup_db):
     assert response.json()["healthy"]
 
 def test_read_patient(setup_db):
+    # Read particlur patient endpoint
     patient_id = setup_db["patient"].id
     
     response = client.get(f"/patient/{patient_id}")
@@ -66,14 +70,14 @@ def test_read_patient(setup_db):
     assert response.json()["name"] == setup_db["patient"].name
 
 def test_read_patients(setup_db):
+    # Read patients endpoint
     response = client.get("/patients")
     assert response.status_code == 200
     assert len(response.json()) > 0
     assert response.json()[0]["name"] == setup_db["patient"].name
 
-
-# Cleanup function to remove the test database file after tests
 def cleanup_test_db():
+    # Cleanup function to remove the test database file after tests
     if os.path.exists("./test.db"):
         os.remove("./test.db")
 
