@@ -1,4 +1,4 @@
-# app/main.py
+"""FastAPI Application"""
 
 import logging
 from typing import List

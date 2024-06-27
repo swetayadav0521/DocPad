@@ -1,4 +1,4 @@
-# app/database.py
+"""Database Connection and Session Management"""
 
 import os
 from sqlalchemy import create_engine

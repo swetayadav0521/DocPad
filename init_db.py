@@ -1,4 +1,4 @@
-# init_db.py
+"""Script to initialize database with dummy data"""
 
 import logging
 import os

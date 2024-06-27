@@ -1,4 +1,4 @@
-# app/models.py
+"""Defining the Data Models"""
 
 from datetime import datetime
 from sqlalchemy import Column, DateTime, Integer, String, ForeignKey, Boolean

@@ -1,4 +1,4 @@
-# app/crud.py
+"""CRUD Operations"""
 
 import logging
 from sqlalchemy.exc import SQLAlchemyError
