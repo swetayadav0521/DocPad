@@ -18,28 +18,24 @@ APIs To Document Patient Interactions and View Patient History
 ### Endpoints
 
 1. Document Patient Interaction:
-- Method: POST
-- URL: /patient/{patient_id}/interaction
-- Description: Records an interaction with a patient, documenting the outcome.
+  - Method: `POST`
+  - URL: `/patient/{patient_id}/interaction`
+  - Description: Records an interaction with a patient, documenting the outcome.
 2. View Patient History:
-- Method: GET
-- URL: /patient/{patient_id}
+- Method: `GET`
+- URL: `/patient/{patient_id}`
 - Description: Retrieves all interactions for a specific patient.
 3. List All Patients:
-- Method: GET
-- URL: /patients
+- Method: `GET`
+- URL: `/patients`
 - Description: Lists all patients in the database.
-
----
 
 ## Prerequisites
 
 - Docker
 - Docker compose
 
----
-
-## Steps to Run the application
+## Steps to run the application
 
 1. Clone the Repository
 
@@ -78,7 +74,7 @@ python -m pytest tests/*.py
 
 1. **Dropdown List for Health Status**: Doctors can select the health status of a patient from a dropdown list with options "Yes" and "No".
 
-### Benefits:
+#### Benefits:
 
 - Simplifies the process of recording patient health status.
 - Reduces the data entry errors.
@@ -86,7 +82,7 @@ python -m pytest tests/*.py
 
 2. **Machine Learning Algorithm for Health Status**: Implement a machine learning algorithm to analyze the "notes" field and automatically determine the patient's health status based on the comments.
 
-### Benefits:
+#### Benefits:
 
 - Can assist doctors in making more informed decisions.
 - Enhances the capability of the application with intelligent features.
