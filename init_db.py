@@ -1,5 +1,6 @@
 """Script to initialize database with dummy data"""
 
+import csv
 import logging
 import os
 from sqlalchemy import create_engine
@@ -25,46 +26,47 @@ def init_db():
     db = SessionLocal()
 
     # Create initial patients
-    patient1 = models.Patient(name="John Doe", age=30, gender="Male")
-    patient2 = models.Patient(name="Jane Smith", age=25, gender="Male")
-    logger.info("Added Patient2: %s", patient2.name)
+    with open("dummy_data/patients.csv", "r") as csvfile:
+        # creating a csv dict reader object for patients
+        records = csv.DictReader(csvfile)
 
-    db.add(patient1)
-    db.add(patient2)
-    db.commit()
+        for record in records:
+            patient = models.Patient(
+                name=record["name"], age=record["age"], gender=record["gender"]
+            )
+            db.add(patient)
+            db.commit()
 
     # Create initial doctor
-    doctor = models.Doctor(
-        name="Dr. Baymax", gender="Male", specialty="General Practice"
-    )
+    with open("dummy_data/doctors.csv", "r") as csvfile:
+        # creating a csv dict reader object for doctors
+        records = csv.DictReader(csvfile)
 
-    db.add(doctor)
-    db.commit()
+        for record in records:
+            doctor = models.Doctor(
+                name=record["name"],
+                gender=record["gender"],
+                specialty=record["specialty"],
+            )
+            db.add(doctor)
+            db.commit()
 
     # Create initial interactions
-    interaction1 = models.Interaction(
-        patient_id=patient1.id,
-        doctor_id=doctor.id,
-        notes="Annual checkup",
-        healthy=True,
-    )
-    interaction2 = models.Interaction(
-        patient_id=patient1.id,
-        doctor_id=doctor.id,
-        notes="Follow-up visit",
-        healthy=True,
-    )
-    interaction3 = models.Interaction(
-        patient_id=patient2.id,
-        doctor_id=doctor.id,
-        notes="Initial consultation",
-        healthy=False,
-    )
-
-    db.add(interaction1)
-    db.add(interaction2)
-    db.add(interaction3)
-    db.commit()
+    interaction_notes = [
+        {"notes": "Annual checkup"},
+        {"notes": "Follow-up visit"},
+        {"notes": "Initial consultation"},
+    ]
+    for id in range(1, 11):
+        for notes in interaction_notes:
+            interaction = models.Interaction(
+                patient_id=id,
+                doctor_id=id,
+                notes=notes["notes"],
+                healthy=True,
+            )
+            db.add(interaction)
+            db.commit()
 
     db.close()
 
