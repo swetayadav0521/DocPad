@@ -48,27 +48,47 @@ def setup_db():
     db.commit()
     db.refresh(patient)
     db.refresh(doctor)
-    yield {"patient": patient, "doctor": doctor}
+    
+    interaction_data = {
+        "doctor_id": doctor.id,
+        "notes": "Routine Checkup",
+        "healthy": True,
+        "datetime": str(datetime.now()),
+    }
+    yield {"patient": patient, "doctor": doctor, "interaction_data": interaction_data}
 
 
 def test_create_interaction(setup_db):
     # Record doctor and patient interaction endpoint
     patient_id = setup_db["patient"].id
     doctor_id = setup_db["doctor"].id
-    interaction_data = {
-        "patient_id": patient_id,
-        "doctor_id": doctor_id,
-        "notes": "Routine Checkup",
-        "healthy": True,
-        "datetime": str(datetime.now()),
-    }
-
+    interaction_data = setup_db["interaction_data"]
+    
     response = client.post(f"/patient/{patient_id}/interaction", json=interaction_data)
-
     assert response.status_code == 200
-    assert response.json()["patient_id"] == patient_id
     assert response.json()["doctor_id"] == doctor_id
     assert response.json()["healthy"]
+
+  
+def test_create_interaction_patient_doesnotexist(setup_db):
+    # Raise exception if patient_id is not available in db
+    patient_id = 45
+    interaction_data = setup_db["interaction_data"]
+
+    response = client.post(f"/patient/{patient_id}/interaction", json=interaction_data)
+    assert response.status_code == 404
+    assert response.json()["detail"] == f"Unable to find Patient with id {patient_id!r}"
+
+    
+def test_create_interaction_doctor_doesnotexist(setup_db):
+    # Raise exception if doctor_id is not available in db
+    patient_id = setup_db['patient'].id
+    interaction_data = setup_db["interaction_data"]
+    interaction_data['doctor_id'] = 68
+
+    response = client.post(f"/patient/{patient_id}/interaction", json=interaction_data)
+    assert response.status_code == 404
+    assert response.json()["detail"] == f"Unable to find Doctor with id {interaction_data['doctor_id']!r}"
 
 
 def test_read_patient(setup_db):

@@ -23,18 +23,11 @@ class InteractionCreate(BaseModel):
     datetime: datetime
     notes: str
     healthy: bool
-
-
-class PatientResponse(BaseModel):
+    
+class InteractionResponse(InteractionCreate):
+    doctor: DoctorCreate
+     
+class PatientResponse(PatientCreate):
     id: int
-    name: str
-    age: int
-    interactions: List[InteractionCreate] = []
+    interactions: List[InteractionResponse] = []
 
-
-class InteractionResponse(BaseModel):
-    patient_id: int
-    doctor_id: int
-    datetime: datetime
-    notes: str
-    healthy: bool
